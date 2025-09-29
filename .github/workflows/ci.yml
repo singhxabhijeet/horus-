@@ -1,0 +1,28 @@
+name: Go CI
+
+# This workflow runs on pushes to any branch and on pull requests
+on: [push, pull_request]
+
+jobs:
+  build:
+    # Use the latest version of Ubuntu to run the job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out your repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25' 
+
+      # Step 3: Run go build to check for compile errors
+      - name: Build
+        run: go build -v ./...
+
+      # Step 4: Run tests (good practice to have this step)
+      - name: Test
+        run: go test -v ./...
