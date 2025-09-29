@@ -1,6 +1,5 @@
 # Horus - A Concurrent Web Service Health Checker 🩺
 
-![GitHub Actions CI](https://github.com/singhxabhijeet/horus/actions/workflows/ci.yml/badge.svg)
 ![Go Version](https://img.shields.io/badge/Go-1.22+-blue.svg)
 ![Docker](https://img.shields.io/badge/Docker-24.0-blue?logo=docker)
 
