@@ -8,13 +8,13 @@ Horus is a backend monitoring service written in Go that periodically checks the
 
 ---
 
-## ## Problem Solved
+## Problem Solved
 
 In any distributed system, knowing the health of your services is critical. This project tackles that foundational concept of reliability and monitoring. Instead of a simple CRUD application, Horus solves a real-world problem: providing a lightweight, API-driven way to track service uptime, status codes, and response times.
 
 ---
 
-## ## Features
+## Features
 
 * **RESTful API**: Endpoints to add and list sites for monitoring.
 * **Concurrent Background Worker**: A non-blocking worker, built with Goroutines, checks all registered sites simultaneously every minute.
@@ -24,7 +24,7 @@ In any distributed system, knowing the health of your services is critical. This
 
 ---
 
-## ## Tech Stack
+## Tech Stack
 
 * **Language**: **Go**
 * **Database**: **PostgreSQL**
@@ -33,16 +33,16 @@ In any distributed system, knowing the health of your services is critical. This
 
 ---
 
-## ## Getting Started
+## Getting Started
 
 You can get the entire application running on your local machine with just two commands.
 
-### ### Prerequisites
+### Prerequisites
 
 * Git
 * Docker and Docker Compose
 
-### ### Installation & Setup
+### Installation & Setup
 
 1.  **Clone the repository:**
     ```bash
@@ -65,11 +65,11 @@ You can get the entire application running on your local machine with just two c
 
 ---
 
-## ## API Usage
+## API Usage
 
 You can interact with the API using any client like `curl` or Postman.
 
-### ### 1. Add a new site to monitor
+### 1. Add a new site to monitor
 
 * **Endpoint**: `POST /api/sites`
 * **Body**:
@@ -89,7 +89,7 @@ You can interact with the API using any client like `curl` or Postman.
     }
     ```
 
-### ### 2. List all monitored sites
+### 2. List all monitored sites
 
 * **Endpoint**: `GET /api/sites`
 * **Example `curl` command:**
@@ -109,7 +109,7 @@ You can interact with the API using any client like `curl` or Postman.
 
 ---
 
-## ## Key Concepts Demonstrated
+## Key Concepts Demonstrated
 
 This project was built to demonstrate proficiency in several key areas of modern backend and DevOps engineering:
 
