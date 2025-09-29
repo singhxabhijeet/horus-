@@ -1,0 +1,5 @@
+# Ignore the .env file which contains secrets
+.env
+
+# Ignore the compiled binary (if you build locally)
+horus-app
