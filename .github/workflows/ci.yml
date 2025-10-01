@@ -1,28 +1,38 @@
-name: Go CI
+name: Build and Push Docker Images
 
-# This workflow runs on pushes to any branch and on pull requests
-on: [push, pull_request]
+on:
+  push:
+    branches: [ "main" ]
 
 jobs:
-  build:
-    # Use the latest version of Ubuntu to run the job
+  build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-      # Step 1: Check out your repository code
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up the Go environment
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Log in to the GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          go-version: '1.25' 
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 3: Run go build to check for compile errors
-      - name: Build
-        run: go build -v ./...
+      - name: Build and push horus-app image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}/horus-app:latest
 
-      # Step 4: Run tests (good practice to have this step)
-      - name: Test
-        run: go test -v ./...
+      - name: Build and push notifier-worker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./workers/notifier
+          file: ./workers/notifier/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/notifier-worker:latest

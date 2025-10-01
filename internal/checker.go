@@ -16,21 +16,21 @@ type HealthCheckResult struct {
 }
 
 // StartChecker initializes the health checking process.
-func StartChecker(db *sql.DB) {
+func StartChecker(db *sql.DB, publisher *Publisher) {
 	log.Println("Starting health checker...")
 	// Run a check immediately on start, then on a ticker
-	go checkAllSites(db)
+	go checkAllSites(db, publisher)
 
 	ticker := time.NewTicker(1 * time.Minute) // Check every 1 minute
 	go func() {
 		for range ticker.C {
-			checkAllSites(db)
+			checkAllSites(db, publisher)
 		}
 	}()
 }
 
 // checkAllSites fetches all sites from the DB and checks them concurrently
-func checkAllSites(db *sql.DB) {
+func checkAllSites(db *sql.DB, publisher *Publisher) {
 	log.Println("Running health checks for all sites...")
 	rows, err := db.Query("SELECT id, url FROM sites")
 	if err != nil {
@@ -56,6 +56,10 @@ func checkAllSites(db *sql.DB) {
 	for i := 0; i < siteCount; i++ {
 		result := <-resultsChan
 		saveCheckResult(db, result)
+
+		if err := publisher.Publish(result); err != nil {
+			log.Printf("Failed to publish message for site ID %d: %v", result.SiteID, err)
+		}
 	}
 	log.Println("Finished health checks.")
 }

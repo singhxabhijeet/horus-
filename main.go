@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/singhxabhijeet/horus/internal" // Use your actual module path
+	"github.com/singhxabhijeet/horus/internal"
 )
 
 func main() {
@@ -15,6 +15,13 @@ func main() {
 	db := internal.NewDB(cfg.DatabaseURL)
 	defer db.Close()
 
+	// Create the publisher
+	publisher, err := internal.NewPublisher(cfg.RabbitMQURL)
+	if err != nil {
+		log.Fatalf("Failed to connect to RabiitMQ: %v", err)
+	}
+	defer publisher.Close()
+
 	// Create a new ServeMux (router)
 	mux := http.NewServeMux()
 
@@ -23,7 +30,7 @@ func main() {
 	api.RegisterRoutes(mux)
 
 	// Start the background health checker
-	internal.StartChecker(db)
+	internal.StartChecker(db, publisher)
 
 	// Start the HTTP server
 	log.Println("Starting server on :8080...")
