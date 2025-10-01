@@ -23,7 +23,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /horus-app .
 # --- Final Stage ---
 # Use a minimal, empty base image for the final container.
 # 'scratch' is the smallest possible image.
-FROM scratch AS final
+FROM alpine:latest AS final
 
 # Set the working directory
 WORKDIR /
