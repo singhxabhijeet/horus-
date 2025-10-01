@@ -1,0 +1,156 @@
+# k8s/all-in-one.yml
+
+# --- PostgreSQL ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+type: Opaque
+stringData:
+  POSTGRES_USER: horus
+  POSTGRES_PASSWORD: horuspass
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secret
+          env:
+            - name: POSTGRES_DB
+              value: "horus_db"
+---
+# --- RabbitMQ ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.13-management-alpine
+          ports:
+            - containerPort: 5672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "user"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "password"
+---
+# --- Application Config ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  DATABASE_URL: "postgres://horus:horuspass@postgres-service:5432/horus_db"
+  RABBITMQ_URL: "amqp://user:password@rabbitmq-service:5672/"
+---
+# --- Horus App (Producer) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: horus-app-service
+spec:
+  selector:
+    app: horus-app
+  type: LoadBalancer # Exposes the service outside the cluster
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: horus-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horus-app
+  template:
+    metadata:
+      labels:
+        app: horus-app
+    spec:
+      containers:
+        - name: horus-app
+          image: ghcr.io/singhxabhijeet/horus/horus-app:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+---
+# --- Notifier Worker (Consumer) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifier-worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notifier-worker
+  template:
+    metadata:
+      labels:
+        app: notifier-worker
+    spec:
+      containers:
+        - name: notifier-worker
+          image: ghcr.io/singhxabhijeet/horus/notifier-worker:latest
+          envFrom:
+            - configMapRef:
+                name: app-config
