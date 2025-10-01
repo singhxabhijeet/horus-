@@ -7,7 +7,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /notifier-worker .
 
 # --- Final Stage ---
-FROM scratch AS final
+FROM alpine:latest AS final
 WORKDIR /
 COPY --from=builder /notifier-worker /notifier-worker
 ENTRYPOINT ["/notifier-worker"]
