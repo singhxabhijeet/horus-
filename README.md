@@ -1,15 +1,14 @@
-# The Conductor - A Cloud-Native Microservices Application 🚀
+# Horus - A Cloud-Native Microservices Application 🚀
 
-![Build and Push Docker Images](https://github.com/your-username/horus/actions/workflows/ci.yml/badge.svg)
 ![Go](https://img.shields.io/badge/Go-1.22+-blue.svg)
 ![Docker](https://img.shields.io/badge/Docker-24.0-blue?logo=docker)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.31-blue?logo=kubernetes)
 
-"The Conductor" is a project that demonstrates the evolution of a simple monolithic application into a scalable, resilient, and distributed system using modern cloud-native principles. It features decoupled microservices, asynchronous communication via a message queue, and declarative deployment on Kubernetes.
+"Horus" is a project that demonstrates the evolution of a simple monolithic application into a scalable, resilient, and distributed system using modern cloud-native principles. It features decoupled microservices, asynchronous communication via a message queue, and declarative deployment on Kubernetes.
 
 ---
 
-## ## Architecture
+## Architecture
 
 The system is designed with a producer/consumer pattern, decoupled by a message queue.
 
@@ -28,7 +27,7 @@ The system is designed with a producer/consumer pattern, decoupled by a message 
 
 ---
 
-## ## Features
+## Features
 
 * **Event-Driven Architecture**: Services communicate asynchronously through messages, improving resilience and scalability.
 * **Decoupled Microservices**: The `Horus` producer and `Notifier` consumer are completely independent, allowing them to be developed, deployed, and scaled separately.
@@ -38,7 +37,7 @@ The system is designed with a producer/consumer pattern, decoupled by a message 
 
 ---
 
-## ## Tech Stack
+## Tech Stack
 
 * **Language**: Go
 * **Containerization**: Docker, Docker Compose
@@ -50,11 +49,11 @@ The system is designed with a producer/consumer pattern, decoupled by a message 
 
 ---
 
-## ## Running the Project
+## Running the Project
 
 There are two ways to run this project: a simple local setup with Docker Compose, or the full deployment on Kubernetes.
 
-### ### 1. Local Development (with Docker Compose)
+### 1. Local Development (with Docker Compose)
 
 This is the quickest way to get the services running on your machine.
 
@@ -80,7 +79,7 @@ This is the quickest way to get the services running on your machine.
     ```
     The API will be available at `http://localhost:8080`.
 
-### ### 2. Kubernetes Deployment (with Minikube)
+### 2. Kubernetes Deployment (with Minikube)
 
 This simulates a production-style deployment on a Kubernetes cluster.
 
@@ -119,7 +118,7 @@ This simulates a production-style deployment on a Kubernetes cluster.
 
 ---
 
-## ## Key Concepts Demonstrated
+## Key Concepts Demonstrated
 
 * **System Design & Architecture**: Evolving a monolith to a distributed microservices system.
 * **Asynchronous Processing**: Using message queues (RabbitMQ) to build resilient, decoupled systems.
